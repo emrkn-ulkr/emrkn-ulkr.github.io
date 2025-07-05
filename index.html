@@ -14,7 +14,7 @@
       <h2>0</h2>
     </div>
     <div class="c_text_area">
-      <h1>Siyah</h1>
+      <h3>Siyah</h3>
     </div>
     <div class="c_color_area">
       <div id="_1" class="c_color_box"></div>
@@ -48,15 +48,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1%;
+    gap: 0;
   }
 
   .c_navbar {
     text-align: center;
     width: 90%;
     border: aliceblue 1px solid;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: aliceblue;
+
   }
 
   .c_text_area {
@@ -114,7 +115,7 @@
     }
 
     .c_navbar {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
     }
 
     .c_color_area {
@@ -140,7 +141,7 @@
   document.querySelector(".c_navbar").appendChild(timerDisplay);
 
   const skorBoard = document.querySelector(".c_navbar h2");
-  const yaziAlani = document.querySelector(".c_text_area h1");
+  const yaziAlani = document.querySelector(".c_text_area h3");
   const renkKutulari = document.querySelectorAll(".c_color_box");
 
   // --- Renk ve Metin Sabitleri ---
