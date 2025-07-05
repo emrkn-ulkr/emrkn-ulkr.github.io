@@ -170,7 +170,7 @@
       timeLeft--; // Süreyi bir azalt
       timerDisplay.textContent = `Süre: ${timeLeft} saniye`;
 
-      if (timeLeft < 0) {
+      if (timeLeft === 0) {
         oyunuBitir("Süre Bitti! ⌛"); // Süre biterse oyunu bitir
       }
     }, 1000); // 1000ms = 1 saniye
@@ -183,8 +183,8 @@
   function oyunuBitir(mesaj) {
     clearInterval(timerInterval); // Zamanlayıcıyı durdur! 🛑
     oyunBasladiMi = false; // Oyun bitti!
-    alert(`${mesaj}\nSkorunuz: ${skorBoard.textContent}`); // Sonucu alert ile göster
-    yaziAlani.textContent = "Yeniden Başla!"; // Kullanıcıya ipucu ver
+    alert(`${mesaj}\n Skorunuz: ${skorBoard.textContent}`); // Sonucu alert ile göster
+    yaziAlani.textContent = "Yeniden Başlamak İçin Bir Renk Seçiniz!"; // Kullanıcıya ipucu ver
   }
 
   /**
