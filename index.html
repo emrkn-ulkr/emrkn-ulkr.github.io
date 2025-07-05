@@ -122,46 +122,120 @@
       padding: 1% 1% 1% 1%;
     }
   }
+
+  #timer {
+    color: rgba(49, 241, 43, 0.712)
+  }
 </style>
 
 <script>
-  const kırmızıRenkKodu = '#CE1836';
-  const sarıRenkKodu = '#EDB92E';
-  const maviRenkKodu = '#3A2BE0';
-  const siyahRenkKodu = '#140E12';
+  // --- Değişkenlerimizi Hazırlayalım ---
+  let timeLeft = 20; // Süre değişkeni
+  let timerInterval = null; // Zamanlayıcıyı kontrol etmek için (setInterval)
+  let oyunBasladiMi = false; // Oyunun başlayıp başlamadığını kontrol eden bayrak 🚩
 
-  const kırmızıRenkMetni = 'Kırmızı';
-  const sarıRenkMetni = 'Sarı';
-  const maviRenkMetni = 'Mavi';
-  const siyahRenkMetni = 'Siyah';
+  // --- HTML Elementlerini Seçelim ---
+  const timerDisplay = document.createElement("h3");
+  timerDisplay.id = "timer";
+  document.querySelector(".c_navbar").appendChild(timerDisplay);
 
-  const renkKarmalari = [kırmızıRenkKodu, sarıRenkKodu, maviRenkKodu, siyahRenkKodu];
-  const metinKarmalari = [kırmızıRenkMetni, sarıRenkMetni, maviRenkMetni, siyahRenkMetni];
+  const skorBoard = document.querySelector(".c_navbar h2");
+  const yaziAlani = document.querySelector(".c_text_area h1");
+  const renkKutulari = document.querySelectorAll(".c_color_box");
 
-  document.querySelectorAll(".c_color_box").forEach(tiklananRenkKutusu => {
-    tiklananRenkKutusu.addEventListener("click", function () {
-      let tiklananKutununRengi = window.getComputedStyle(tiklananRenkKutusu).backgroundColor;
-      let yazanMetninRengi = window.getComputedStyle(document.querySelector(".c_text_area h1")).color;
+  // --- Renk ve Metin Sabitleri ---
+  const renkKarmalari = ['rgb(206, 24, 54)', 'rgb(237, 185, 46)', 'rgb(58, 43, 224)', 'rgb(20, 14, 18)'];
+  const metinKarmalari = ['Kırmızı', 'Sarı', 'Mavi', 'Siyah'];
 
+  // --- Oyun Fonksiyonları ---
 
-      if (tiklananKutununRengi === yazanMetninRengi) {
-        document.querySelector(".c_navbar h2").textContent++;
+  /**
+   * Oyunu başlatır veya yeniden başlatır.
+   * Süreyi 20'ye ayarlar, skoru sıfırlar ve zamanlayıcıyı çalıştırır.
+   */
+  function oyunuBaslat() {
+    oyunBasladiMi = true; // Oyun başladı!
+    timeLeft = 20; // Süreyi yeniden 20 yap
+    skorBoard.textContent = 0; // Skoru sıfırla
+    yeniTurHazirla(); // İlk renk ve yazıyı getir
 
-        let rastgeleRenk = renkKarmalari[rastgeleSayiBul(0, 3)];
-        let rastgeleMetin = metinKarmalari[rastgeleSayiBul(0, 3)];
+    timerDisplay.textContent = `Süre: ${timeLeft} saniye`; // Ekranda göster
 
-        document.querySelector(".c_text_area h1").textContent = rastgeleMetin;
-        document.querySelector(".c_text_area h1").style.color = rastgeleRenk;
-      } else {
-        alert("Skoru Puanınız: " + document.querySelector(".c_navbar h2").textContent);
-        document.querySelector(".c_navbar h2").textContent = 0;
+    // Önceki zamanlayıcı varsa temizle (yeniden başlama durumu için)
+    clearInterval(timerInterval);
+
+    // Zamanlayıcıyı her saniye çalışacak şekilde ayarla
+    timerInterval = setInterval(() => {
+      timeLeft--; // Süreyi bir azalt
+      timerDisplay.textContent = `Süre: ${timeLeft} saniye`;
+
+      if (timeLeft < 0) {
+        oyunuBitir("Süre Bitti! ⌛"); // Süre biterse oyunu bitir
       }
+    }, 1000); // 1000ms = 1 saniye
+  }
 
-    })
-  });
+  /**
+   * Oyunu bitirir.
+   * Zamanlayıcıyı durdurur ve sonuç mesajını gösterir.
+   */
+  function oyunuBitir(mesaj) {
+    clearInterval(timerInterval); // Zamanlayıcıyı durdur! 🛑
+    oyunBasladiMi = false; // Oyun bitti!
+    alert(`${mesaj}\nSkorunuz: ${skorBoard.textContent}`); // Sonucu alert ile göster
+    yaziAlani.textContent = "Yeniden Başla!"; // Kullanıcıya ipucu ver
+  }
 
+  /**
+   * Doğru cevap sonrası yeni bir tur hazırlar.
+   */
+  function yeniTurHazirla() {
+    let rastgeleRenk = renkKarmalari[rastgeleSayiBul(0, 3)];
+    let rastgeleMetin = metinKarmalari[rastgeleSayiBul(0, 3)];
+
+    yaziAlani.textContent = rastgeleMetin;
+    yaziAlani.style.color = rastgeleRenk;
+  }
+
+  /**
+   * Min ve max arasında rastgele bir sayı üretir.
+   */
   function rastgeleSayiBul(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+
+  // --- Olay Dinleyicileri (Event Listeners) ---
+
+  // Her bir renk kutusuna tıklama olayı ekleyelim
+  renkKutulari.forEach(tiklananRenkKutusu => {
+    tiklananRenkKutusu.addEventListener("click", function () {
+      // Eğer oyun henüz başlamadıysa, bu ilk tıklama oyunu başlatır!
+      if (!oyunBasladiMi) {
+        oyunuBaslat();
+        return; // İlk tıklama sadece başlatır, kontrol yapmaz.
+      }
+
+      // Tıklanan kutunun ve yazının rengini alalım (getComputedStyle ile doğru renk kodunu alırız)
+      let tiklananKutununRengi = window.getComputedStyle(tiklananRenkKutusu).backgroundColor;
+      let yazanMetninRengi = window.getComputedStyle(yaziAlani).color;
+
+      // Renkler eşleşiyor mu? (Doğru Cevap) ✅
+      if (tiklananKutununRengi === yazanMetninRengi) {
+        skorBoard.textContent++; // Skoru 1 artır
+        timeLeft++; // Süreye 1 saniye ekle
+        timerDisplay.textContent = `Süre: ${timeLeft} saniye`; // Ekranı güncelle
+        yeniTurHazirla(); // Bir sonraki soruya geç
+      }
+      // Renkler eşleşmiyor! (Yanlış Cevap) ❌
+      else {
+        oyunuBitir("Yanlış Seçim! Oyun Bitti. 😔");
+      }
+    });
+  });
+
+  // Başlangıçta ekranı hazırlayalım
+  timerDisplay.textContent = `Başlamak için bir renge tıkla!`;
+  yaziAlani.textContent = "Yazının Rengini Bulma Oyunu";
 
 </script>
