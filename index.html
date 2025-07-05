@@ -130,12 +130,12 @@
 </style>
 
 <script>
-  // --- Değişkenlerimizi Hazırlayalım ---
-  let timeLeft = 10; // Süre değişkeni
-  let timerInterval = null; // Zamanlayıcıyı kontrol etmek için (setInterval)
-  let oyunBasladiMi = false; // Oyunun başlayıp başlamadığını kontrol eden bayrak 🚩
 
-  // --- HTML Elementlerini Seçelim ---
+  let timeLeft = 10;
+  let timerInterval = null;
+  let oyunBasladiMi = false;
+
+
   const timerDisplay = document.createElement("h3");
   timerDisplay.id = "timer";
   document.querySelector(".c_navbar").appendChild(timerDisplay);
@@ -144,53 +144,43 @@
   const yaziAlani = document.querySelector(".c_text_area h3");
   const renkKutulari = document.querySelectorAll(".c_color_box");
 
-  // --- Renk ve Metin Sabitleri ---
+
   const renkKarmalari = ['rgb(206, 24, 54)', 'rgb(237, 185, 46)', 'rgb(58, 43, 224)', 'rgb(20, 14, 18)'];
   const metinKarmalari = ['Kırmızı', 'Sarı', 'Mavi', 'Siyah'];
 
-  // --- Oyun Fonksiyonları ---
 
-  /**
-   * Oyunu başlatır veya yeniden başlatır.
-   * Süreyi 20'ye ayarlar, skoru sıfırlar ve zamanlayıcıyı çalıştırır.
-   */
   function oyunuBaslat() {
     alert("Oyun Başladı");
-    oyunBasladiMi = true; // Oyun başladı!
-    timeLeft = 10; // Süreyi yeniden 20 yap
-    skorBoard.textContent = 0; // Skoru sıfırla
-    yeniTurHazirla(); // İlk renk ve yazıyı getir
+    oyunBasladiMi = true;
+    timeLeft = 10;
+    skorBoard.textContent = 0;
+    yeniTurHazirla();
 
-    timerDisplay.textContent = `Süre: ${timeLeft} saniye`; // Ekranda göster
+    timerDisplay.textContent = `Süre: ${timeLeft} saniye`;
 
-    // Önceki zamanlayıcı varsa temizle (yeniden başlama durumu için)
+
     clearInterval(timerInterval);
 
-    // Zamanlayıcıyı her saniye çalışacak şekilde ayarla
+
     timerInterval = setInterval(() => {
-      timeLeft--; // Süreyi bir azalt
+      timeLeft--;
       timerDisplay.textContent = `Süre: ${timeLeft} saniye`;
 
       if (timeLeft === 0) {
-        oyunuBitir("Süre Bitti! ⌛"); // Süre biterse oyunu bitir
+        oyunuBitir("Süre Bitti! ⌛");
       }
-    }, 1000); // 1000ms = 1 saniye
+    }, 1000);
   }
 
-  /**
-   * Oyunu bitirir.
-   * Zamanlayıcıyı durdurur ve sonuç mesajını gösterir.
-   */
+
   function oyunuBitir(mesaj) {
-    clearInterval(timerInterval); // Zamanlayıcıyı durdur! 🛑
-    oyunBasladiMi = false; // Oyun bitti!
-    alert(`${mesaj}\n Skorunuz: ${skorBoard.textContent}`); // Sonucu alert ile göster
-    yaziAlani.textContent = "Yeniden Başlamak İçin Bir Renk Seçiniz!"; // Kullanıcıya ipucu ver
+    clearInterval(timerInterval);
+    oyunBasladiMi = false;
+    alert(`${mesaj}\n Skorunuz: ${skorBoard.textContent}`);
+    yaziAlani.textContent = "Yeniden Başlamak İçin Bir Renk Seçiniz!";
   }
 
-  /**
-   * Doğru cevap sonrası yeni bir tur hazırlar.
-   */
+
   function yeniTurHazirla() {
     let rastgeleRenk = renkKarmalari[rastgeleSayiBul(0, 3)];
     let rastgeleMetin = metinKarmalari[rastgeleSayiBul(0, 3)];
@@ -199,44 +189,39 @@
     yaziAlani.style.color = rastgeleRenk;
   }
 
-  /**
-   * Min ve max arasında rastgele bir sayı üretir.
-   */
+
   function rastgeleSayiBul(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
 
-  // --- Olay Dinleyicileri (Event Listeners) ---
 
-  // Her bir renk kutusuna tıklama olayı ekleyelim
   renkKutulari.forEach(tiklananRenkKutusu => {
     tiklananRenkKutusu.addEventListener("click", function () {
-      // Eğer oyun henüz başlamadıysa, bu ilk tıklama oyunu başlatır!
+
       if (!oyunBasladiMi) {
         oyunuBaslat();
-        return; // İlk tıklama sadece başlatır, kontrol yapmaz.
+        return;
       }
 
-      // Tıklanan kutunun ve yazının rengini alalım (getComputedStyle ile doğru renk kodunu alırız)
       let tiklananKutununRengi = window.getComputedStyle(tiklananRenkKutusu).backgroundColor;
       let yazanMetninRengi = window.getComputedStyle(yaziAlani).color;
 
-      // Renkler eşleşiyor mu? (Doğru Cevap) ✅
+
       if (tiklananKutununRengi === yazanMetninRengi) {
-        skorBoard.textContent++; // Skoru 1 artır
-        timeLeft++; // Süreye 1 saniye ekle
-        timerDisplay.textContent = `Süre: ${timeLeft} saniye`; // Ekranı güncelle
-        yeniTurHazirla(); // Bir sonraki soruya geç
+        skorBoard.textContent++;
+        timeLeft++;
+        timerDisplay.textContent = `Süre: ${timeLeft} saniye`;
+        yeniTurHazirla();
       }
-      // Renkler eşleşmiyor! (Yanlış Cevap) ❌
+
       else {
         oyunuBitir("Yanlış Seçim! Oyun Bitti. 😔");
       }
     });
   });
 
-  // Başlangıçta ekranı hazırlayalım
+
   timerDisplay.textContent = `Başlamak için bir renge tıkla!`;
   yaziAlani.textContent = "Yazının Rengini Bulma Oyunu";
 
