@@ -130,7 +130,7 @@
 
 <script>
   // --- Değişkenlerimizi Hazırlayalım ---
-  let timeLeft = 20; // Süre değişkeni
+  let timeLeft = 10; // Süre değişkeni
   let timerInterval = null; // Zamanlayıcıyı kontrol etmek için (setInterval)
   let oyunBasladiMi = false; // Oyunun başlayıp başlamadığını kontrol eden bayrak 🚩
 
@@ -156,7 +156,7 @@
   function oyunuBaslat() {
     alert("Oyun Başladı");
     oyunBasladiMi = true; // Oyun başladı!
-    timeLeft = 20; // Süreyi yeniden 20 yap
+    timeLeft = 10; // Süreyi yeniden 20 yap
     skorBoard.textContent = 0; // Skoru sıfırla
     yeniTurHazirla(); // İlk renk ve yazıyı getir
 
