@@ -1,11 +1,167 @@
-<div class="foo">
-  
-</div>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Renk Oyunu</title>
+</head>
+
+<body>
+  <div class="c_container">
+    <div class="c_navbar">
+      <h3>İlerleme: </h3>
+      <h2>0</h2>
+    </div>
+    <div class="c_text_area">
+      <h1>Siyah</h1>
+    </div>
+    <div class="c_color_area">
+      <div id="_1" class="c_color_box"></div>
+      <div id="_2" class="c_color_box"></div>
+      <div id="_3" class="c_color_box"></div>
+      <div id="_4" class="c_color_box"></div>
+    </div>
+  </div>
+</body>
+
+</html>
 
 <style>
-  .foo{
-    background-color: red;
-    width:50vw;
-    height: 50vh;
+  * {
+    box-sizing: border-box;
+    font-family: 'Trebuchet MS';
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 1%;
+    background-image: url(https://static.colourlovers.com/images/patterns/6039/6039709.png?1751560715);
+    backdrop-filter: blur(10px);
+    background-size: 1%;
+  }
+
+  .c_container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1%;
+  }
+
+  .c_navbar {
+    text-align: center;
+    width: 90%;
+    border: aliceblue 1px solid;
+    font-size: 1.5rem;
+    color: aliceblue;
+  }
+
+  .c_text_area {
+    width: 90%;
+    height: auto;
+    border: aliceblue 1px solid;
+    text-align: center;
+    font-size: 2rem;
+    color: #140E12;
+    background-color: #ffffff5f;
+  }
+
+  .c_color_area {
+    display: flex;
+    flex-wrap: wrap;
+    width: 90%;
+    padding: 1% 25% 1% 25%;
+    height: auto;
+    border: aliceblue 1px solid;
+    justify-content: center;
+  }
+
+  .c_color_box {
+    width: 34%;
+    aspect-ratio: 1/1;
+    border: aliceblue 1px solid;
+  }
+
+  .c_color_box:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
+
+  #_1 {
+    background-color: #CE1836;
+  }
+
+  #_2 {
+    background-color: #EDB92E;
+  }
+
+  #_3 {
+    background-color: #3A2BE0;
+  }
+
+  #_4 {
+    background-color: #140E12
+  }
+
+  @media(max-width: 1000px) {
+
+    html,
+    body {
+      background-size: 5%;
+    }
+
+    .c_navbar {
+      font-size: 2rem;
+    }
+
+    .c_color_area {
+      width: 90%;
+      padding: 1% 1% 1% 1%;
+    }
   }
 </style>
+
+<script>
+  const kırmızıRenkKodu = '#CE1836';
+  const sarıRenkKodu = '#EDB92E';
+  const maviRenkKodu = '#3A2BE0';
+  const siyahRenkKodu = '#140E12';
+
+  const kırmızıRenkMetni = 'Kırmızı';
+  const sarıRenkMetni = 'Sarı';
+  const maviRenkMetni = 'Mavi';
+  const siyahRenkMetni = 'Siyah';
+
+  const renkKarmalari = [kırmızıRenkKodu, sarıRenkKodu, maviRenkKodu, siyahRenkKodu];
+  const metinKarmalari = [kırmızıRenkMetni, sarıRenkMetni, maviRenkMetni, siyahRenkMetni];
+
+  document.querySelectorAll(".c_color_box").forEach(tiklananRenkKutusu => {
+    tiklananRenkKutusu.addEventListener("click", function () {
+      let tiklananKutununRengi = window.getComputedStyle(tiklananRenkKutusu).backgroundColor;
+      let yazanMetninRengi = window.getComputedStyle(document.querySelector(".c_text_area h1")).color;
+
+
+      if (tiklananKutununRengi === yazanMetninRengi) {
+        document.querySelector(".c_navbar h2").textContent++;
+
+        let rastgeleRenk = renkKarmalari[rastgeleSayiBul(0, 3)];
+        let rastgeleMetin = metinKarmalari[rastgeleSayiBul(0, 3)];
+
+        document.querySelector(".c_text_area h1").textContent = rastgeleMetin;
+        document.querySelector(".c_text_area h1").style.color = rastgeleRenk;
+      } else {
+        alert("Skoru Puanınız: " + document.querySelector(".c_navbar h2").textContent);
+        document.querySelector(".c_navbar h2").textContent = 0;
+      }
+
+    })
+  });
+
+  function rastgeleSayiBul(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+</script>
